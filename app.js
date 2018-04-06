@@ -8,7 +8,8 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 const path = require('path');
-const port = 5000;
+const port = process.env.PORT || 5000;
+const db = require('./config/database')
 
 const ideas = require('./routes/ideas');
 const users = require('./routes/users');
@@ -19,7 +20,7 @@ const users = require('./routes/users');
 //Map global promise
 mongoose.Promise = global.Promise;
 //conect to mongoose
-mongoose.connect('mongodb://localhost/vidjot-dev')
+mongoose.connect(db.mongoURI)
     .then(() => console.log('MongoDB connected...'))
     .catch(err=>console.log(err));
 
