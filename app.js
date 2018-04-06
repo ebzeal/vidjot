@@ -9,13 +9,14 @@ const mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 const path = require('path');
 const port = process.env.PORT || 5000;
-const db = require('./config/database')
 
 const ideas = require('./routes/ideas');
 const users = require('./routes/users');
 
   //Passport config
   require('./config/passport')(passport);
+  //DB config  
+const db = require('./config/database');
 
 //Map global promise
 mongoose.Promise = global.Promise;
