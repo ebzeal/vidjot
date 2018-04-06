@@ -3,7 +3,8 @@ const app = express();
 const exphbs = require('express-handlebars');
 var methodOverride = require('method-override');
 const flash = require('connect-flash');
-const session = require('express-session')
+const session = require('express-session');
+const passport = require('passport');
 const mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 const path = require('path');
@@ -11,14 +12,16 @@ const port = 5000;
 
 const ideas = require('./routes/ideas');
 const users = require('./routes/users');
+
+  //Passport config
+  require('./config/passport')(passport);
+
 //Map global promise
 mongoose.Promise = global.Promise;
 //conect to mongoose
 mongoose.connect('mongodb://localhost/vidjot-dev')
     .then(() => console.log('MongoDB connected...'))
     .catch(err=>console.log(err));
-
-
 
 // Middleware for Handlebars
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
@@ -39,6 +42,9 @@ app.use(session({
     saveUninitialized: true
   }));
 
+//Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
 //Middleware for flash-connect
 app.use(flash());
 
@@ -49,6 +55,7 @@ app.use(express.static(path.join(__dirname, 'public')));
       res.locals.success_msg = req.flash('success_msg');
       res.locals.error_msg = req.flash('error_msg');
       res.locals.error = req.flash('error');
+      res.locals.user = req.user||null;
       next();
   });
 
